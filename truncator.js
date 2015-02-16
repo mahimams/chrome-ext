@@ -17,15 +17,40 @@ function truncate( tweet , parsedTweet , render ){
 		tweet = tweet.replace( reg , value );
 	}
 	
-	if( tweet.length > 140 )
-		tweet = tweet.replace( /e/g , '' );
-	if( tweet.length > 140 )
-		tweet = tweet.replace( /o/g , '' );
-	if( tweet.length > 140 )
-		tweet = tweet.replace( /u/g , '' );
-			
+	compressWordEquivalents = compress( tweet.length , allWords );
+	for( key in compressWordEquivalents ){
+		
+		value = " " + compressWordEquivalents[ key ] + " ";
+		key = " " + key + " ";
+		reg = new RegExp( key , 'g' );
+		tweet = tweet.replace( reg , value );
+	}
+
 	render( tweet );
 	return;
+}
+
+function compress( tweetSize , words ){
+
+	chatEq = {};
+	for( i =0; i < words.length; i++ ){
+
+		if( words[i].length > 2 ){
+			chatWord = words[ i ].replace( /e/g , '' );
+			chatWord = words[ i ].replace( /o/g , '' );
+			chatWord = words[ i ].replace( /u/g , '' );
+
+			chatEq[ words[i] ] = chatWord;
+			reducedWordSize = words[ i ].length - chatWord.length;
+			tweetSize = tweetSize - reducedWordSize;
+		}
+			
+		}
+		if( tweetSize <= 140 )
+			break;
+			
+	}
+	return chatEq;
 }
 
 /**

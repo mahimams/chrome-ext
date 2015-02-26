@@ -12,9 +12,10 @@ function truncate( tweet , parsedTweet , render ){
 	for( key in chatWordEquivalents ){
 		
 		value = " " + chatWordEquivalents[ key ] + " ";
-		key = " " + key + " ";
-		reg = new RegExp( key , 'g' );
+		key = /(\s)+key[(\s)|[.,]]/g;
+		reg = new RegExp( key );
 		tweet = tweet.replace( reg , value );
+		
 	}
 	
 	compressWordEquivalents = compress( tweet.length , allWords );
@@ -24,6 +25,7 @@ function truncate( tweet , parsedTweet , render ){
 		key = " " + key + " ";
 		reg = new RegExp( key , 'g' );
 		tweet = tweet.replace( reg , value );
+		
 	}
 
 	render( tweet );
@@ -39,17 +41,17 @@ function compress( tweetSize , words ){
 			chatWord = words[ i ].replace( /e/g , '' );
 			chatWord = words[ i ].replace( /o/g , '' );
 			chatWord = words[ i ].replace( /u/g , '' );
+			chatWord = words[ i ].replace( /ing/g , 'ng' );
 
 			chatEq[ words[i] ] = chatWord;
 			reducedWordSize = words[ i ].length - chatWord.length;
 			tweetSize = tweetSize - reducedWordSize;
 		}
 			
-		}
+	
 		if( tweetSize <= 140 )
 			break;
-			
-	}
+	}		
 	return chatEq;
 }
 
